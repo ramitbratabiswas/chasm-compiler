@@ -4,6 +4,8 @@ export interface ASTNode {
   [key: string]: any;
 }
 
+const TokenTypes = [ "number_token" ]
+
 export const parse = (tokens: Token[]): ASTNode[] => {
   const ast: ASTNode[] = [];
   let index = 0;
@@ -12,17 +14,10 @@ export const parse = (tokens: Token[]): ASTNode[] => {
   const eatToken = () => tokens[index++];
 
   while (index < tokens.length) {
-    const token = tokens[index];
+    const token = eatToken();
 
-    if (token.type === "keyword") {
-      switch (token.value) {
-        case "print":
-          ast.push(parsePrintStatement(eatToken));
-          break;
-        // !!!TODO: add more keyword token value cases
-        default:
-          throw new Error(`unknown keyword ${token.value}`);
-      }
+    if (token.type === "number_token") {
+      ast.push({ type: "number", value: token.value });
     } else {
       // !!!TODO: add more token type cases
       throw new Error(`unknown token type ${token.type}`);
@@ -31,19 +26,16 @@ export const parse = (tokens: Token[]): ASTNode[] => {
   return ast;
 }
 
-function parsePrintStatement(eatToken: () => Token): ASTNode {
-  const keywordToken = eatToken();
-  const expressionToken = eatToken();
-
-  if (expressionToken.type !== "number") {
-    throw new Error(`Expected number after 'print', found: ${expressionToken.value}`);
-  }
-
+function parseAddStatement(eatToken: () => Token): ASTNode {
+  const addKeyWord = eatToken();
+  const num1 = eatToken(), num2 = eatToken();
+  console.log("num1: ", num1);
+  console.log("num2: ", num2);
   return {
-    type: "printStatement",
-    expression: {
-      type: "numberLiteral",
-      value: parseFloat(expressionToken.value),
-    },
-  };
+    type: "addFunc",
+    operands: [
+      { type: "numberLiteral", value: num1.value },
+      { type: "numberLiteral", value: num2.value }
+    ]
+  }
 }

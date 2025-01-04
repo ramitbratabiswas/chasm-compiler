@@ -10,22 +10,16 @@ type regexMatcher = {
   type: string;
 }
 
-const keywords = ["print", "var", "setpixel", "while", "endwhile"];
-
+const keywords = ["add"];
 export const tokenize = (input: string): Token[] => {
   const tokens: Token[] = [];
   let index = 0;
 
   const regexMatchers: regexMatcher[] = [
-    { regex: /^\/\/.*/, type: "comment" },
-    { regex: /^\s+/, type: "whitespace" },
-    { regex: /^[0-9.]+/, type: "number" },
-    { regex: new RegExp(`^(${keywords.join("|")})`), type: "keyword" },
-    { regex: /^"([^"]*)"/, type: "string" },
-    { regex: /^[\+\-\*\/\=\(\)]/, type: "operator" },
-    { regex: /^(true|false)/, type: "boolean" },
-    { regex: /^[a-zA-Z_][a-zA-Z0-9_]*/, type: "identifier" },
-    { regex: /^[{}[\];]/, type: "special" }
+    { regex: /^\/\/.*/, type: "comment_token" },
+    { regex: /^\s+/, type: "whitespace_token" },
+    { regex: /^[0-9.]+/, type: "number_token" },
+    { regex: new RegExp(`^(${keywords.join("|")})`), type: "keyword_token" }
   ];
 
   while (index < input.length) {
@@ -34,7 +28,7 @@ export const tokenize = (input: string): Token[] => {
       const match: RegExpMatchArray | null = input.substring(index).match(matcher.regex);
       if (match) {
         // ignores whitespace and comments
-        if (matcher.type !== "whitespace" && matcher.type !== "comment") {
+        if (matcher.type !== "whitespace_token" && matcher.type !== "comment_token") {
           tokens.push({ type: matcher.type, value: match[0] });
         }
         index += match[0].length;
