@@ -1,11 +1,12 @@
 import { tokenize } from "./tokenizer";
+import { parse } from "./parser";
 
 const sourceCode = `
 print 200
-// comment
-setpixel false
 `;
 
 const tokens = tokenize(sourceCode);
+const ast = parse(tokens);
 
 console.log("Tokens:", tokens);
+console.log("AST:", ast);
