@@ -10,7 +10,7 @@ type regexMatcher = {
   type: string;
 }
 
-const keywords = ["add"];
+const keywords = ["add", "sub"];
 export const tokenize = (input: string): Token[] => {
   const tokens: Token[] = [];
   let index = 0;
